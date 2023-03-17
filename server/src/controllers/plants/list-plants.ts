@@ -5,7 +5,7 @@ const listPlants: RequestHandler = async (req, res) => {
 
   const snapshot = await fbService().db.collection("plants").get();
   let results = {};
-  snapshot.forEach(doc => {
+  snapshot.forEach((doc: any) => {
     results = {
       ...results,
       [doc.id]: doc.data(),
