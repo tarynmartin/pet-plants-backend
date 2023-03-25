@@ -31,3 +31,6 @@ const scrape = () => {
 };
 
 scrape();
+
+//NOTE: You can run this script from a command line with the following command:
+// node /path/to/scrape-script.ts
