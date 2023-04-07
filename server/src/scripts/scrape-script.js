@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const axios = require('axios');
 const puppeteer = require('puppeteer');
-const fs = require('fs');
+const firebaseService = require("../lib/firebase-node.js");
 
 // Define the URL to scrape
 const catsURL = 'https://www.aspca.org/pet-care/animal-poison-control/cats-plant-list';
 const dogsURL = 'https://www.aspca.org/pet-care/animal-poison-control/dogs-plant-list'
 const sectionDiv = '.view-all-plants-list'
 
-const firebaseService = require("../lib/firebase-node.js");
 
 // Use axios to fetch the webpage content
 const scrape = async (url) => {
@@ -21,16 +19,13 @@ const scrape = async (url) => {
       return _browser.newPage()
     })
     .then(async page => {
-    const output = await page.goto(url);
-    console.log('url', output)
+    await page.goto(url);
     await page.waitForSelector('.view-all-plants-list')
     return await page.evaluate(sectionDiv => {
       const links = [...document.querySelectorAll('.view-content > .views-row')].map(el => el.querySelector('a').href)
       return links;
     }, sectionDiv)
   })
-
-  console.log('urls', urls);
   
      const pagePromise = async (link) => {
         const page = await _browser.newPage()
@@ -117,16 +112,16 @@ const scrape = async (url) => {
       let i = 0;
     for(link in urls) {
       const currentPageData = await pagePromise(urls[link]);
-      // if(i++ < 5) {
-      //   await firebaseService().db.collection('plants').add(currentPageData)
-      // }
+      if(i++ < 5) {
+        firebaseService().db.collection('plants').add(currentPageData)
+      }
       scrappedData.push(currentPageData)
     }
 
     await _browser.close();
-    scrappedData.forEach(async datum => {
-      await firebaseService().db.collection('plants').add(datum);
-    })
+    // scrappedData.forEach(async datum => {
+    //   await firebaseService().db.collection('plants').add(datum);
+    // })
   }
 
 try {
