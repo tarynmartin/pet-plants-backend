@@ -1,36 +1,134 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const axios = require('axios');
-const jsdom = require('jsdom');
+const puppeteer = require('puppeteer');
+const fs = require('fs');
 
 // Define the URL to scrape
-const url = 'https://example.com';
+const catsURL = 'https://www.aspca.org/pet-care/animal-poison-control/cats-plant-list';
+const dogsURL = 'https://www.aspca.org/pet-care/animal-poison-control/dogs-plant-list'
+const sectionDiv = '.view-all-plants-list'
 
 // Use axios to fetch the webpage content
-const scrape = () => {
-  // const response = await axios.get(url);
-  //do something with gotten
+const scrape = async (url) => {
+  const scrappedData = []
+  let _browser;
 
-  axios.get(url)
-    .then(response => {
-      const dom = new jsdom.JSDOM(response.data);
-      const document = dom.window.document;
-
-      const title = document.querySelector('title').textContent;
-      // const description = document.querySelector('meta[name="description"]')?.content ?? "[no description]";
-      const contents = document.querySelectorAll("p");
-
-      console.log("Page Title: ", title);
-      // console.log("Page Description: ", description);
-      console.log("Page Content: ");
-      contents.forEach(p => console.log(`<p>${p.textContent}</p>`));
-
+  const urls = await puppeteer.launch()
+    .then(browser => {
+      _browser = browser;
+      return _browser.newPage()
     })
-    .catch(error => {
-      console.error('Error fetching webpage content: ', error);
-    });
-};
+    .then(async page => {
+    const output = await page.goto(url);
+    console.log('url', output)
+    await page.waitForSelector('.view-all-plants-list')
+    return await page.evaluate(sectionDiv => {
+      const links = [...document.querySelectorAll('.view-content > .views-row')].map(el => el.querySelector('a').href)
+      return links;
+    }, sectionDiv)
+  })
 
-scrape();
+  console.log('urls', urls);
+  
+     const pagePromise = async (link) => {
+        const page = await _browser.newPage()
+        await page.goto(link)
+        let dataObj = {};
+        const commonNames = '.pane-node-field-additional-common-names'
+
+      dataObj.image = await page.evaluate(() => {
+        const image = document.querySelector('.field-item > img')?.getAttribute('src')
+        return image ? image : ''
+      })
+
+        dataObj.name = await page.evaluate(() => {
+          const name = document.querySelector('.pane-1 > h1')?.textContent
+          return name ? name : ''
+        })
+
+        dataObj.popularNames = await page.evaluate(commonNames => {
+        const names = document.querySelector('.field-name-field-additional-common-names > .field-items')?.textContent
+        if (names) {
+          const splitNames = names.split(": ")
+          return splitNames[1].split(', ')
+        }
+        return [];
+        }, commonNames)
+
+        dataObj.scientificName = await page.evaluate(() => {
+        const name = document.querySelector('.field-name-field-scientific-name > .field-items')?.textContent
+        if (name) {
+          const splitName = name.split(": ")
+          return splitName[1]
+        }
+        return '';
+        })
+
+        dataObj.family = await page.evaluate(() => {
+        const familyName = document.querySelector('.field-name-field-family > .field-items')?.textContent
+        if (familyName) {
+          const splitName = familyName.split(": ")
+          return splitName[1]
+        }
+        return '';
+      })
+
+      dataObj.signs = await page.evaluate(() => {
+        const signs = document.querySelector('.field-name-field-clinical-signs > .field-items')?.textContent
+        if (signs) {
+          const splitName = signs.split(": ")
+          return splitName[1]
+        }
+        return '';
+      })
+
+      dataObj.description = await page.evaluate(() => {
+        const description = document.querySelector('.field-name-field-toxic-principles > .field-items')?.textContent
+        if (description) {
+          const splitName = description.split(": ")
+          return splitName[1]
+        }
+        return '';
+      })
+
+      dataObj.toxicCats = await page.evaluate(() => {
+        const toxicity = document.querySelector('.field-name-field-toxicity > .field-items')?.textContent
+        if (toxicity) {
+          const splitName = toxicity.split(": ")
+          return !splitName[1].includes['Non-Toxic to Cats'] && splitName[1].includes('Toxic to Cats')
+        }
+        return false;
+      })
+
+      dataObj.toxicDogs = await page.evaluate(() => {
+        const toxicity = document.querySelector('.field-name-field-toxicity > .field-items')?.textContent
+        if (toxicity) {
+          const splitName = toxicity.split(": ")
+          return !splitName[1].includes['Non-Toxic to Dogs'] && splitName[1].includes('Toxic to Dogs')
+        }
+        return false;
+      })
+
+        console.log('obj', dataObj);
+        page.close()
+      }
+      let i = 0;
+    for(link in urls) {
+      const currentPageData = await pagePromise(urls[link]);
+      if(i++ < 5) console.log(currentPageData);
+      scrappedData.push(currentPageData)
+    }
+
+    await _browser.close();
+    // scrappedData.forEach(datum => firebase.savePlant(datum))
+  }
+
+try {
+  scrape(catsURL);
+  // scrape(dogsURL);
+} catch (e) {
+  console.log('error', e)
+}
 
 //NOTE: You can run this script from a command line with the following command:
 // node /path/to/scrape-script.ts
