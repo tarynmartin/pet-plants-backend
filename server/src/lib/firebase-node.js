@@ -27,4 +27,4 @@ const firebaseService = () => {
   return service;
 };
 
-exports.firebaseService = firebaseService;
+exports.service = firebaseService;

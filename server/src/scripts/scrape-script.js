@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const puppeteer = require('puppeteer');
-const firebaseService = require("../lib/firebase-node.js");
+const firebase = require("../lib/firebase-node.js");
 
 // Define the URL to scrape
 const catsURL = 'https://www.aspca.org/pet-care/animal-poison-control/cats-plant-list';
@@ -33,10 +33,10 @@ const scrape = async (url) => {
         let dataObj = {};
         const commonNames = '.pane-node-field-additional-common-names'
 
-      dataObj.image = await page.evaluate(() => {
-        const image = document.querySelector('.field-item > img')?.getAttribute('src')
-        return image ? image : ''
-      })
+        dataObj.image = await page.evaluate(() => {
+          const image = document.querySelector('.field-item > img')?.getAttribute('src')
+          return image ? image : ''
+        })
 
         dataObj.name = await page.evaluate(() => {
           const name = document.querySelector('.pane-1 > h1')?.textContent
@@ -68,53 +68,57 @@ const scrape = async (url) => {
           return splitName[1]
         }
         return '';
-      })
+        })
 
-      dataObj.signs = await page.evaluate(() => {
-        const signs = document.querySelector('.field-name-field-clinical-signs > .field-items')?.textContent
-        if (signs) {
-          const splitName = signs.split(": ")
-          return splitName[1]
-        }
-        return '';
-      })
+        dataObj.signs = await page.evaluate(() => {
+          const signs = document.querySelector('.field-name-field-clinical-signs > .field-items')?.textContent
+          if (signs) {
+            const splitName = signs.split(": ")
+            return splitName[1]
+          }
+          return '';
+        })
 
-      dataObj.description = await page.evaluate(() => {
-        const description = document.querySelector('.field-name-field-toxic-principles > .field-items')?.textContent
-        if (description) {
-          const splitName = description.split(": ")
-          return splitName[1]
-        }
-        return '';
-      })
+        dataObj.description = await page.evaluate(() => {
+          const description = document.querySelector('.field-name-field-toxic-principles > .field-items')?.textContent
+          if (description) {
+            const splitName = description.split(": ")
+            return splitName[1]
+          }
+          return '';
+        })
 
-      dataObj.toxicCats = await page.evaluate(() => {
-        const toxicity = document.querySelector('.field-name-field-toxicity > .field-items')?.textContent
-        if (toxicity) {
-          const splitName = toxicity.split(": ")
-          return !splitName[1].includes['Non-Toxic to Cats'] && splitName[1].includes('Toxic to Cats')
-        }
-        return false;
-      })
+        dataObj.toxicCats = await page.evaluate(() => {
+          const toxicity = document.querySelector('.field-name-field-toxicity > .field-items')?.textContent
+          if (toxicity) {
+            const splitName = toxicity.split(": ")
+            return !splitName[1].includes['Non-Toxic to Cats'] && splitName[1].includes('Toxic to Cats')
+          }
+          return false;
+        })
 
-      dataObj.toxicDogs = await page.evaluate(() => {
-        const toxicity = document.querySelector('.field-name-field-toxicity > .field-items')?.textContent
-        if (toxicity) {
-          const splitName = toxicity.split(": ")
-          return !splitName[1].includes['Non-Toxic to Dogs'] && splitName[1].includes('Toxic to Dogs')
-        }
-        return false;
-      })
+        dataObj.toxicDogs = await page.evaluate(() => {
+          const toxicity = document.querySelector('.field-name-field-toxicity > .field-items')?.textContent
+          if (toxicity) {
+            const splitName = toxicity.split(": ")
+            return !splitName[1].includes['Non-Toxic to Dogs'] && splitName[1].includes('Toxic to Dogs')
+          }
+          return false;
+        })
 
         console.log('obj', dataObj);
+        return dataObj;
         page.close()
       }
-      let i = 0;
-    for(link in urls) {
-      const currentPageData = await pagePromise(urls[link]);
-      if(i++ < 5) {
-        firebaseService().db.collection('plants').add(currentPageData)
-      }
+
+    let start = 0, end = 2;
+    for(let i = start; i < end; i++) {
+      const currentPageData = await pagePromise(urls[i]);
+      // if(i++ < 3) {
+        // console.log("add plant:", currentPageData);
+        const res = await firebase.service().db.collection('plants').add(currentPageData)
+        console.log("added plant, id: ", res.id);
+      // }
       scrappedData.push(currentPageData)
     }
 
