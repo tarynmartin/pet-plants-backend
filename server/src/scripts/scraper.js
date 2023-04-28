@@ -152,8 +152,6 @@ const getPageLinks = async (url) => {
   return links;
 }
 
-//EXPORT the getPageLinks function
-exports.getPageLinks = getPageLinks;
 
 // const selectors = {
 //   "image": () => document.querySelector('.field-item > img')?.getAttribute('src'),
@@ -253,4 +251,6 @@ const getPlantFromLink = async (link) => {
     return dataObj;
 };
 
+//EXPORT the getPageLinks function
+exports.getPageLinks = getPageLinks;
 exports.getPlantFromLink = getPlantFromLink;
