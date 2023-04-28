@@ -111,11 +111,22 @@ const scrape = async (url) => {
         page.close()
       }
 
+<<<<<<< HEAD
     let start = 0, end = 2;
     for(let i = start; i < end; i++) {
       const currentPageData = await pagePromise(urls[i]);
       const res = await firebase.service().db.collection('plants').add(currentPageData)
       console.log("added plant, id: ", res.id);
+=======
+    // let start = 0, end = 2;
+    for(link in urls) {
+      const currentPageData = await pagePromise(urls[link]);
+      // if(i++ < 3) {
+        // console.log("add plant:", currentPageData);
+        const res = await firebase.service().db.collection('plants').add(currentPageData)
+        console.log("added plant, id: ", res.id);
+      // }
+>>>>>>> c6085bf (updated scrape script)
       scrappedData.push(currentPageData)
     }
 
