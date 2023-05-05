@@ -9,7 +9,9 @@ const dogsURL = 'https://www.aspca.org/pet-care/animal-poison-control/dogs-plant
 
 //Sampling the data for testing.
 const sampleStart = 0;
-const sampleCount = 2;
+const sampleCount = 25;
+
+const normalizeName= (name) => name.toLowerCase().trim();
 
 const loadFamilies = async (database) => {
   const response = await database.from("plant_families").select("*");
@@ -31,14 +33,14 @@ const scrape = async (url) => {
   // console.log("sample links", sampleLinks);
 
   console.log("-- getting plant data --");
-  for(let i = 0; i < sampleLinks.length; i++){
+  for(let i = 0; i < links.length; i++){
     
-    const link = sampleLinks[i];
+    const link = links[i];
     const data = await scraper.getPlantFromLink(link);
     // console.log("plant data", data);
 
     //Check for an existing plant
-    const dupeResponse = await database.from("plants").select("*").eq("scientificName", data.scientificName);
+    const dupeResponse = await database.from("plants").select("*").eq("scientificName", normalizeName(data.scientificName));
     if(dupeResponse.data?.length > 0){
       //we already have this plant (via the scientific name)
       console.log("skipping existing plant", data.scientificName);
@@ -47,18 +49,18 @@ const scrape = async (url) => {
 
     //check for an existing family
     if(data.family){
-      let existingFamily = families.find(f => f.name === data.family);
+      let existingFamily = families.find(f => f.name === normalizeName(data.family));
       console.log("existing family", existingFamily);
 
       if(!existingFamily){
         console.log("adding new family: ", data.family);
-        const response = await database.from("plant_families").insert({ name: data.family });
+        const response = await database.from("plant_families").insert({ name: normalizeName(data.family) });
         
         //TODO: response doesn't include the new ID, so need to re-query the families table to get the newly added family.
         console.log("insert family response", response);
         //reload the families, and find the newly added one
         families = await loadFamilies(database);
-        existingFamily = families.find(f => f.name === data.family);
+        existingFamily = families.find(f => f.name === normalizeName(data.family));
       }
 
       //modify the data to include the family ID
@@ -72,7 +74,7 @@ const scrape = async (url) => {
 
     //Fix-up the popular names so it is just a string
     data.popularNames = data.popularNames.join(",");
-    
+    data.scientificName = normalizeName(data.scientificName);
     console.log(`adding plant ${data.name} to database`);
     const addResponse = await database.from("plants").insert(data);
 
@@ -86,8 +88,8 @@ const scrape = async (url) => {
 
 try{
   const actions = [
-    scrape(catsURL),
-    // scrape(dogsURL),
+    // scrape(catsURL),
+    scrape(dogsURL),
   ];
 
   Promise.all(actions).then(() => {
