@@ -88,8 +88,8 @@ const scrape = async (url) => {
 
 try{
   const actions = [
-    // scrape(catsURL),
-    scrape(dogsURL),
+    scrape(catsURL),
+    // scrape(dogsURL),
   ];
 
   Promise.all(actions).then(() => {

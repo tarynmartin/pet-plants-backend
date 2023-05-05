@@ -17,7 +17,6 @@ This is all that's necessary for the Firebase Admin SDK to connect to the Fireba
 
 ## Usage:
 
-
 `npm run dev` - Run the development server.
 
 `npm test` - Run tests.
@@ -28,8 +27,6 @@ This is all that's necessary for the Firebase Admin SDK to connect to the Fireba
 
 `npm start` - Runs the server.
 ## Default endpoints:
- - npm run dev
- - use postman to test endpoint
 
 A `GET` request to `/plants` will list all the plants in the Firestore database
 
