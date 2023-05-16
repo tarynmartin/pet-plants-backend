@@ -17,7 +17,6 @@ This is all that's necessary for the Firebase Admin SDK to connect to the Fireba
 
 ## Usage:
 
-
 `npm run dev` - Run the development server.
 
 `npm test` - Run tests.

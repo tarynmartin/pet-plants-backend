@@ -6,6 +6,7 @@ import addPlant from "../controllers/plants/add-plant";
 const plantRoutes = express.Router()
 
 plantRoutes.get("/", listPlants);
+// plantRoutes.get("/:id", getPlant);
 plantRoutes.get("/scrape", scrapePlants);
 plantRoutes.post("/", addPlant);
 

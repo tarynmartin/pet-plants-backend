@@ -1,21 +1,14 @@
 import { RequestHandler } from "express";
-import fbService from "../../lib/firebase";
+import sbDatabase  from "../../lib/supabase-node-ts";
+
 
 const listPlants: RequestHandler = async (req, res) => {
-
-  const snapshot = await fbService().db.collection("plants").get();
-  let results = {};
-  snapshot.forEach((doc: any) => {
-    results = {
-      ...results,
-      [doc.id]: doc.data(),
-    };
-    // console.log(doc.id, '=>', doc.data());
-  });
-
-  // console.log("plants: ", data);
-
-  res.status(200).json(results);
+  const { data: plants, error } = await sbDatabase().from("plants").select("*");
+  if (error) {
+    res.send(error);
+  } else {
+    res.send(plants);
+  }
 }
 
 export default listPlants;
