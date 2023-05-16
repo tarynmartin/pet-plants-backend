@@ -7,7 +7,11 @@ let service: SupabaseClient<any, "public", any> | null = null;
 const supabaseService = () => {
   if(service === null){
     console.log("initializing the supabase service.");
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> master
     //TODO: create this file, based on supabase-example.json, and then paste in real values from supabase
     const serviceAccountFilePath = "./supabase-service-account.json";
     const creds = require(serviceAccountFilePath);
@@ -19,4 +23,8 @@ const supabaseService = () => {
   return service;
 };
 
+<<<<<<< HEAD
 export default supabaseService;
+=======
+export default supabaseService;
+>>>>>>> master
