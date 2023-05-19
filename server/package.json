@@ -5,7 +5,6 @@
   "author": "Taryn & Brian",
   "license": "MIT",
   "main": "dist/src/index.js",
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/src/index.js",
