@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import creds from './supabase-service-account.js';
+import creds from './supabase-service-account';
 
 let service: SupabaseClient<any, "public", any> | null = null;
 
