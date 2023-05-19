@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "module": "commonjs", /* Specify what module code is generated. */
+    "module": "es6", /* Specify what module code is generated. */
     "moduleResolution": "node",
     "rootDir": ".",
     "outDir": "./dist",
@@ -11,6 +11,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "preserveConstEnums": true,
+    "lib": ["dom","es6"]
   },
   "files": [
     "src/index.ts"
