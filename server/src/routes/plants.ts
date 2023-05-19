@@ -8,15 +8,9 @@ import toxicPlantsByAnimal from '../controllers/plants/toxic-plants-by-animal';
 const plantRoutes = express.Router()
 
 plantRoutes.get("/", listPlants);
-<<<<<<< HEAD
 plantRoutes.get('/:id', getPlantByID);
 plantRoutes.get('/search/:search', searchForPlants)
 plantRoutes.get('/toxicity/:toxicity', toxicPlants)
 plantRoutes.get('/:animal/:toxicity', toxicPlantsByAnimal)
-=======
-// plantRoutes.get("/:id", getPlant);
-plantRoutes.get("/scrape", scrapePlants);
-plantRoutes.post("/", addPlant);
->>>>>>> master
 
 export default plantRoutes;
