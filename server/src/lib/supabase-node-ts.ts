@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import serviceAccount from './supabase-service-account.json';
+import creds from './supabase-service-account.js';
 
 let service: SupabaseClient<any, "public", any> | null = null;
 
@@ -10,8 +10,7 @@ const supabaseService = () => {
     console.log("initializing the supabase service.");
     
     //TODO: create this file, based on supabase-example.json, and then paste in real values from supabase
-
-    const supabase = createClient(serviceAccount['projectUrl'], serviceAccount['serviceKey']);
+    const supabase = createClient(creds.projectUrl, creds.serviceKey);
     service = supabase;
   }
 
