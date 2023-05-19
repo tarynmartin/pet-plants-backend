@@ -11,7 +11,7 @@ const dogsURL = 'https://www.aspca.org/pet-care/animal-poison-control/dogs-plant
 const sampleStart = 0;
 const sampleCount = 25;
 
-const normalizeName= (name) => name.toLowerCase().trim();
+const normalizeName= (name) => name ? name.toLowerCase().trim() : '';
 
 const loadFamilies = async (database) => {
   const response = await database.from("plant_families").select("*");
@@ -23,24 +23,21 @@ const loadFamilies = async (database) => {
 const scrape = async (url) => {
   const database = supabase.database();
   let families = await loadFamilies(database);
-  // console.log("families", families);
 
   console.log("-- getting page links --");
   const links = await scraper.getPageLinks(url);
 
   //slice the list to get only the sample size.
   const sampleLinks = links.slice(sampleStart, sampleCount);
-  // console.log("sample links", sampleLinks);
 
   console.log("-- getting plant data --");
   for(let i = 0; i < links.length; i++){
     
     const link = links[i];
     const data = await scraper.getPlantFromLink(link);
-    // console.log("plant data", data);
 
     //Check for an existing plant
-    const dupeResponse = await database.from("plants").select("*").eq("scientificName", normalizeName(data.scientificName));
+    const dupeResponse = await database.from("plants").select("*").eq("scientific_name", normalizeName(data.scientificName));
     if(dupeResponse.data?.length > 0){
       //we already have this plant (via the scientific name)
       console.log("skipping existing plant", data.scientificName);
@@ -73,8 +70,8 @@ const scrape = async (url) => {
     delete data.family;   //remove the family field (the table has familyId)
 
     //Fix-up the popular names so it is just a string
-    data.popularNames = data.popularNames.join(",");
-    data.scientificName = normalizeName(data.scientificName);
+    data.popular_names = data.popular_names.join(",");
+    data.scientific_name = normalizeName(data.scientific_name);
     console.log(`adding plant ${data.name} to database`);
     const addResponse = await database.from("plants").insert(data);
 
@@ -88,8 +85,8 @@ const scrape = async (url) => {
 
 try{
   const actions = [
-    scrape(catsURL),
-    // scrape(dogsURL),
+    // scrape(catsURL),
+    scrape(dogsURL),
   ];
 
   Promise.all(actions).then(() => {
