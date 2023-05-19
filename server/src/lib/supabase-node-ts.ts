@@ -11,7 +11,7 @@ const supabaseService = () => {
     
     //TODO: create this file, based on supabase-example.json, and then paste in real values from supabase
 
-    const supabase = createClient(serviceAccount.projectUrl, serviceAccount.serviceKey);
+    const supabase = createClient(serviceAccount['projectUrl'], serviceAccount['serviceKey']);
     service = supabase;
   }
 
