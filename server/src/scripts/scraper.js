@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
-
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 
 const sectionDiv = '.view-all-plants-list'
 
@@ -15,7 +14,7 @@ const getBrowserPage = async () => {
   return _browser.newPage();
 }
 
-const getPageLinks = async (url) => {
+export const getPageLinks = async (url) => {
 
   console.log("getting browser and page...");
   const page = await getBrowserPage();
@@ -35,7 +34,7 @@ const getPageLinks = async (url) => {
   return links;
 }
 
-const getPlantFromLink = async (link) => {
+export const getPlantFromLink = async (link) => {
   //TODO: look into re-using the browser and page, maybe just navigating again?
     console.log("getting browser and page...");
     const page = await getBrowserPage();
@@ -124,7 +123,3 @@ const getPlantFromLink = async (link) => {
 
     return dataObj;
 };
-
-//EXPORT the getPageLinks function
-exports.getPageLinks = getPageLinks;
-exports.getPlantFromLink = getPlantFromLink;

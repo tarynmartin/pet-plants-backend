@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 
-const supabase = require("../lib/supabase-node.js");
-const scraper = require("./scraper.js");
+import supabase from '../lib/supabase-node';
+// const supabase = require("../lib/supabase-node.js");
+import scraper from './scraper';
+// const scraper = require("./scraper.js");
 
 const catsURL = 'https://www.aspca.org/pet-care/animal-poison-control/cats-plant-list';
 const dogsURL = 'https://www.aspca.org/pet-care/animal-poison-control/dogs-plant-list';
