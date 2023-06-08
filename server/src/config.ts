@@ -12,6 +12,7 @@ const config = {
     
     clientOrigins: {
         'development': process.env['DEV_ORIGIN'] ?? '*',
+        // when FE is deployed, the client origin should be the FE deployed url
         'production': process.env['PROD_ORIGIN'] ?? 'none'
     }
 }
