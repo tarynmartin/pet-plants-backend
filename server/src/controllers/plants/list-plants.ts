@@ -7,7 +7,15 @@ const listPlants: RequestHandler = async (req, res) => {
   if (error) {
     res.send(error);
   } else {
-    res.send(plants);
+    res.send(plants.sort((a, b) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;
+}));
   }
 }
 
