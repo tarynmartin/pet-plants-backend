@@ -7,6 +7,7 @@ import errorHandler from './middleware/errorHandler';
 import fourOhFour from './middleware/fourOhFour';
 import root from './routes/root';
 import plantRoutes from "./routes/plants";
+import authRoutes from './routes/auth';
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.use(morgan('tiny'))
 // Apply routes before error handling
 app.use('/', root)
 app.use("/plants", plantRoutes);
+app.use('/auth', authRoutes);
 
 // Apply error handling last
 app.use(fourOhFour)
