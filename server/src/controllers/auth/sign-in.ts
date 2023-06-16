@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import sbDatabase  from "../../lib/supabase-node-ts";
 
 const signInUser: RequestHandler = async(req, res) => {
+  console.log('request body', req.body);
   const { data, error } = await sbDatabase().auth.signInWithPassword({
     email: req.body.email,
     password: req.body.password ,
