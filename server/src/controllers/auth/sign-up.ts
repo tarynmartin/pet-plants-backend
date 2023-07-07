@@ -5,6 +5,12 @@ const signUpUser: RequestHandler = async(req, res) => {
   const { data, error } = await sbDatabase().auth.signUp({
     email: req.body.email,
     password: req.body.password ,
+    options: {
+      data: {
+        phone_number: req.body.phone,
+        terms_agreement: req.body.agreement,
+      }
+    }
   })
   
   if (error) {
