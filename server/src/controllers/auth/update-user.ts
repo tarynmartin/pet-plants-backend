@@ -6,10 +6,11 @@ const updateUser: RequestHandler = async(req, res) => {
     access_token: req.body.access,
     refresh_token: req.body.refresh,
   })
+  console.log('set session', sessionData, sessionError)
   const { data, error } = await sbDatabase().auth.updateUser({
     password: req.body.newPassword
   })
-  console.log('update user', data)
+  console.log('update user', data, error)
   if (error) {
     res.send(error)
   } else if (sessionError) {
