@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config()
-import packageJson from '../package.json';
+// @ts-ignore
+import packageJson from '../package.json' assert { type: "json" };
 
 const config = {
     version: packageJson.version,

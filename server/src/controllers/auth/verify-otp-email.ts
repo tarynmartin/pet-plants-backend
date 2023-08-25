@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import sbDatabase  from "../../lib/supabase-node-ts";
+import { handleResponse } from '../helpers';
 
 const verifyOtpEmail: RequestHandler = async(req, res) => {
   const { data, error } = await sbDatabase().auth.verifyOtp({
@@ -7,11 +8,8 @@ const verifyOtpEmail: RequestHandler = async(req, res) => {
     token: req.body.token,
     type: 'email',
   })
-  if (error) {
-    res.send(error)
-  } else {
-    res.send(data)
-  }
+  
+  handleResponse(res, data, error);
 }
 
 export default verifyOtpEmail;
