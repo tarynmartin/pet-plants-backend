@@ -3,7 +3,7 @@ import sbDatabase from "../../lib/supabase-node-ts";
 
 const toxicPlants: RequestHandler = async (req, res) => {
 const { data, error } = await 
-sbDatabase().from("plants").select().is('toxicCats, toxicDogs', req.params.toxicity)
+sbDatabase().from("plants").select().is('toxic_cats, toxic_dogs', req.params.toxicity)
   if (error) {
     res.send(error);
   } else {
