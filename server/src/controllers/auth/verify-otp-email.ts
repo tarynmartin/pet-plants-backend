@@ -7,7 +7,6 @@ const verifyOtpEmail: RequestHandler = async(req, res) => {
     token: req.body.token,
     type: 'email',
   })
-  console.log('verify email', data)
   if (error) {
     res.send(error)
   } else {
