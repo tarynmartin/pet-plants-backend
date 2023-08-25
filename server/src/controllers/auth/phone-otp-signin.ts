@@ -8,7 +8,6 @@ const phoneOtpSignIn: RequestHandler = async(req, res) => {
       shouldCreateUser: false
     }
   })
-  console.log('otp phone sign in', data)
   if (error) {
     res.send(error)
   } else {

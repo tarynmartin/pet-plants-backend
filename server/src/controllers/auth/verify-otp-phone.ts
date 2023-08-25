@@ -7,8 +7,7 @@ const verifyOtpPhone: RequestHandler = async(req, res) => {
     token: req.body.token,
     type: 'sms',
   })
-  console.log('verify phone', data)
-  if (error) {
+]  if (error) {
     res.send(error)
   } else {
     res.send(data)

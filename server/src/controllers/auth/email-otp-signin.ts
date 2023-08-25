@@ -8,7 +8,6 @@ const emailOtpSignIn: RequestHandler = async(req, res) => {
       shouldCreateUser: false
     }
   })
-  console.log('otp email sign in', data)
   if (error) {
     res.send(error)
   } else {
