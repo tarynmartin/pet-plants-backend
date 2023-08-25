@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import sbDatabase  from "../../lib/supabase-node-ts";
+import { handleResponse } from '../helpers';
 
 const phoneOtpSignIn: RequestHandler = async(req, res) => {
   const { data, error } = await sbDatabase().auth.signInWithOtp({
@@ -8,11 +9,8 @@ const phoneOtpSignIn: RequestHandler = async(req, res) => {
       shouldCreateUser: false
     }
   })
-  if (error) {
-    res.send(error)
-  } else {
-    res.send(data)
-  }
+  
+  handleResponse(res, data, error)
 }
 
 export default phoneOtpSignIn;
